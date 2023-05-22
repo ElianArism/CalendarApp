@@ -1,2 +1,2 @@
 export * from "./CalendarComponent";
-export * from "./Navbar";
+export * from "./CalendarConfig";
