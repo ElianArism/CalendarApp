@@ -1,9 +1,11 @@
-import { Navbar } from "../components";
+import { CalendarComponent, Navbar } from "../components";
 
 export const Calendar = () => {
   return (
     <>
       <Navbar></Navbar>
+
+      <CalendarComponent />
     </>
   );
 };
