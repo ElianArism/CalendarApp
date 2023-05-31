@@ -9,6 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 
+import { useUIStore } from "../../../hooks/";
 import "./CalendarModal.css";
 
 const customStyles = {
@@ -25,7 +26,7 @@ const customStyles = {
 ReactModal.setAppElement("#root");
 
 export const CalendarModal = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const { isDateModalOpen, triggerModal } = useUIStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const [formValues, setFormValues] = useState({
@@ -48,7 +49,7 @@ export const CalendarModal = () => {
   }, [fieldTitleClass]);
 
   const onCloseModal = () => {
-    setIsOpen(false);
+    triggerModal(false);
   };
 
   const onInputChange = ({ target }) => {
@@ -93,7 +94,7 @@ export const CalendarModal = () => {
 
   return (
     <ReactModal
-      isOpen={isOpen}
+      isOpen={isDateModalOpen}
       onRequestClose={onCloseModal}
       style={customStyles}
       className="modal"
