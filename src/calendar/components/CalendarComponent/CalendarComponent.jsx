@@ -5,6 +5,7 @@ import { addHours } from "date-fns";
 
 import { useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { useUIStore } from "../../../hooks";
 import { CalendarModal } from "../CalendarModal/CalendarModal";
 import { localizer, messages } from "./CalendarConfig";
 import { CalendarEvent } from "./CalendarEvent";
@@ -24,6 +25,7 @@ const myEventsList = [
 ];
 
 export const CalendarComponent = () => {
+  const { triggerModal } = useUIStore();
   const [lastViewSelected, setLastViewSelected] = useState(
     localStorage.getItem("last-view") || "week"
   );
@@ -42,7 +44,7 @@ export const CalendarComponent = () => {
   };
 
   const onDoubleClickEvent = (event) => {
-    console.log(event);
+    triggerModal(true);
   };
   const onSelectEvent = (event) => {
     console.log(" on select ", event);
