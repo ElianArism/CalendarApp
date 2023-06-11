@@ -1,31 +1,17 @@
 /* eslint-disable no-unused-vars */
 import { Calendar as CalendarLib } from "react-big-calendar";
 
-import { addHours } from "date-fns";
-
 import { useState } from "react";
+
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useUIStore } from "../../../hooks";
+import { useCalendarStore, useUIStore } from "../../../hooks";
 import { CalendarModal } from "../CalendarModal/CalendarModal";
 import { localizer, messages } from "./CalendarConfig";
 import { CalendarEvent } from "./CalendarEvent";
 
-const myEventsList = [
-  {
-    title: "Check GYM Hours",
-    notes: "In the morning",
-    start: new Date(),
-    end: addHours(new Date(), 2),
-    bgColor: "#f3f3f3",
-    user: {
-      _id: "125",
-      name: "Elian",
-    },
-  },
-];
-
 export const CalendarComponent = () => {
   const { triggerModal } = useUIStore();
+  const { events, setActiveEvent } = useCalendarStore();
   const [lastViewSelected, setLastViewSelected] = useState(
     localStorage.getItem("last-view") || "week"
   );
@@ -46,8 +32,10 @@ export const CalendarComponent = () => {
   const onDoubleClickEvent = (event) => {
     triggerModal(true);
   };
+
   const onSelectEvent = (event) => {
     console.log(" on select ", event);
+    setActiveEvent(event);
   };
 
   const onViewChange = (event) => {
@@ -58,7 +46,7 @@ export const CalendarComponent = () => {
     <>
       <CalendarLib
         localizer={localizer}
-        events={myEventsList}
+        events={events}
         startAccessor="start"
         endAccessor="end"
         style={{ height: "calc(100vh - 80px)" }}
