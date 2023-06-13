@@ -6,9 +6,9 @@ export const CalendarEvent = memo(({ event }) => {
 
   return (
     <>
-      <strong>{title}</strong>
+      {title && <strong>{title}</strong>}
       <br />
-      <small>{user.name}</small>
+      {user?.name && <small>{user.name}</small>}
     </>
   );
 });
