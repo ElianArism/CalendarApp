@@ -34,7 +34,6 @@ export const CalendarComponent = () => {
   };
 
   const onSelectEvent = (event) => {
-    console.log(" on select ", event);
     setActiveEvent(event);
   };
 

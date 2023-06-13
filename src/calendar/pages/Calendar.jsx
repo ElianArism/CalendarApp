@@ -1,6 +1,7 @@
 import {
   AddNewItemFab,
   CalendarComponent,
+  DeleteFab,
   Navbar,
 } from "../components";
 
@@ -12,6 +13,7 @@ export const Calendar = () => {
       <CalendarComponent />
 
       <AddNewItemFab />
+      <DeleteFab />
     </>
   );
 };
