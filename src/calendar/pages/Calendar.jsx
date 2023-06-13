@@ -1,4 +1,8 @@
-import { CalendarComponent, Navbar } from "../components";
+import {
+  AddNewItemFab,
+  CalendarComponent,
+  Navbar,
+} from "../components";
 
 export const Calendar = () => {
   return (
@@ -6,6 +10,8 @@ export const Calendar = () => {
       <Navbar></Navbar>
 
       <CalendarComponent />
+
+      <AddNewItemFab />
     </>
   );
 };
