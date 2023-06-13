@@ -28,7 +28,7 @@ ReactModal.setAppElement("#root");
 export const CalendarModal = () => {
   const { isDateModalOpen, triggerModal } = useUIStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const { activeEvent } = useCalendarStore();
+  const { activeEvent, startSavingEvent } = useCalendarStore();
 
   const [formValues, setFormValues] = useState({
     title: "",
@@ -90,7 +90,9 @@ export const CalendarModal = () => {
       return;
     }
 
-    console.log(formValues);
+    startSavingEvent(formValues);
+    triggerModal(false);
+    setFormSubmitted(false);
   };
 
   useEffect(() => {
