@@ -6,10 +6,10 @@ import ReactModal from "react-modal";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 
 import { useCalendarStore, useUIStore } from "../../../hooks/";
+import { usePopup } from "../../../hooks/usePopup";
 import "./CalendarModal.css";
 
 const customStyles = {
@@ -29,6 +29,7 @@ export const CalendarModal = () => {
   const { isDateModalOpen, triggerModal } = useUIStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const { activeEvent, startSavingEvent } = useCalendarStore();
+  const { buildCustomPopup } = usePopup();
 
   const [formValues, setFormValues] = useState({
     title: "",
@@ -78,17 +79,13 @@ export const CalendarModal = () => {
     );
 
     if (isNaN(dateDiff) || dateDiff <= 0) {
-      Swal.fire(
-        "Error",
-        "The end date is less than the start date or one of them is invalid ",
-        "error"
-      );
+      buildCustomPopup({
+        title: "Error",
+        html: "The end date is less than the start date or one of them is invalid ",
+        icon: "error",
+      });
       return;
-    }
-
-    if (formValues.title.length < 1) {
-      return;
-    }
+    } else if (formValues.title.length < 1) return;
 
     startSavingEvent(formValues);
     triggerModal(false);
