@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
 export const usePopup = () => {
-  const builCustomPopup = (
+  const buildCustomPopup = (
     options = {
       icon: "",
       title: "",
@@ -26,5 +26,5 @@ export const usePopup = () => {
       didClose: () => onCloseAction(),
     });
   };
-  return { builCustomPopup, buildErrorPopup };
+  return { buildCustomPopup, buildErrorPopup };
 };

@@ -4,7 +4,11 @@ import { Calendar as CalendarLib } from "react-big-calendar";
 import { useState } from "react";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useCalendarStore, useUIStore } from "../../../hooks";
+import {
+  useAuthStore,
+  useCalendarStore,
+  useUIStore,
+} from "../../../hooks";
 import { CalendarModal } from "../CalendarModal/CalendarModal";
 import { localizer, messages } from "./CalendarConfig";
 import { CalendarEvent } from "./CalendarEvent";
@@ -12,13 +16,15 @@ import { CalendarEvent } from "./CalendarEvent";
 export const CalendarComponent = () => {
   const { triggerModal } = useUIStore();
   const { events, setActiveEvent } = useCalendarStore();
+  const { user } = useAuthStore();
   const [lastViewSelected, setLastViewSelected] = useState(
     localStorage.getItem("last-view") || "week"
   );
 
   const changeEventStyle = (event, start, end, isSelected) => {
+    const isMyEvent = user._id === event.user._id;
     const style = {
-      backgroundColor: "#347cf7",
+      backgroundColor: isMyEvent ? "#347cf7" : "#FFC300",
       borderRadius: "0px",
       opacity: 0.9,
       color: "white",

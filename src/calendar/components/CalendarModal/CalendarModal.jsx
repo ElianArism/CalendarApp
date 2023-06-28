@@ -85,11 +85,7 @@ export const CalendarModal = () => {
         icon: "error",
       });
       return;
-    }
-
-    if (formValues.title.length < 1) {
-      return;
-    }
+    } else if (formValues.title.length < 1) return;
 
     startSavingEvent(formValues);
     triggerModal(false);

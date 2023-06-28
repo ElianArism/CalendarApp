@@ -3,6 +3,7 @@ import API from "../api/calendarApi";
 import { saveJWT } from "../helpers/saveJWT";
 import {
   clearError,
+  clearEvents,
   onAuthenticated,
   onLogout,
   verifyAuthentication,
@@ -64,6 +65,7 @@ export const useAuthStore = () => {
   };
 
   const startLogout = () => {
+    dispatch(clearEvents());
     dispatch(onLogout());
     localStorage.clear();
   };
@@ -73,11 +75,8 @@ export const useAuthStore = () => {
     if (!token) return dispatch(onLogout());
 
     try {
-      const {
-        data: {
-          data: { username, _id, token },
-        },
-      } = await API.get("/auth/renew");
+      const response = await API.get("/auth/renew");
+      const { username, _id, token } = response.data.data;
       saveJWT(token);
       dispatch(onAuthenticated({ username, _id }));
     } catch (error) {
