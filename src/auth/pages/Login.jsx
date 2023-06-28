@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import Swal from "sweetalert2";
 import { useAuthStore, useForm } from "../../hooks";
+import { usePopup } from "../../hooks/usePopup";
 import "./login.css";
 
 const loginForm = {
@@ -20,6 +20,7 @@ export const Login = () => {
     email: loginEmail,
     password: loginPassword,
     onInputChange: onLoginFormInputChange,
+    onResetForm: resetLoginForm,
   } = useForm(loginForm);
 
   const {
@@ -27,24 +28,40 @@ export const Login = () => {
     email,
     password,
     repeatPwd,
-    formState: registerFormState,
     onInputChange: onRegisterFormInputChange,
+    onResetForm: resetRegisterForm,
   } = useForm(registerForm);
 
-  const { startLogin, errorMessage, clearErrors } = useAuthStore();
+  const { startLogin, startRegister, errorMessage, clearErrors } =
+    useAuthStore();
+  const { buildErrorPopup } = usePopup();
 
-  const onLoginFormSubmit = (event) => {
+  const onLoginFormSubmit = async (event) => {
     event.preventDefault();
 
-    startLogin({
+    await startLogin({
       email: loginEmail,
       password: loginPassword,
     });
+
+    resetLoginForm();
   };
 
-  const onRegisterFormSubmit = (event) => {
+  const onRegisterFormSubmit = async (event) => {
     event.preventDefault();
-    console.log(registerFormState);
+
+    if (password !== repeatPwd) {
+      buildErrorPopup("Passwords don't match.", clearErrors);
+      return;
+    }
+
+    await startRegister({
+      username,
+      password,
+      email,
+    });
+
+    resetRegisterForm();
   };
 
   useEffect(() => {
@@ -52,15 +69,8 @@ export const Login = () => {
       return;
     }
 
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      html: errorMessage,
-      didClose: () => {
-        clearErrors();
-      },
-    });
-  }, [errorMessage, clearErrors]);
+    buildErrorPopup(errorMessage, clearErrors);
+  }, [errorMessage, clearErrors, buildErrorPopup]);
 
   return (
     <div className="container login-container">

@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import API from "../api/calendarApi";
+import { saveJWT } from "../helpers/saveJWT";
 import {
   clearError,
-  onLogin,
+  onAuthenticated,
   onLogout,
   verifyAuthentication,
 } from "../store";
@@ -25,15 +26,36 @@ export const useAuthStore = () => {
         password,
       });
 
-      dispatch(onLogin({ email, username, _id }));
+      dispatch(onAuthenticated({ email, username, _id }));
 
-      localStorage.setItem("x-token", token);
-      localStorage.setItem(
-        "x-token-start-date",
-        new Date().getTime()
+      saveJWT(token);
+    } catch (error) {
+      const exception =
+        error?.response?.data?.error?.message || "Unknown error";
+      dispatch(onLogout(exception));
+    }
+  };
+
+  const startRegister = async ({ username, email, password }) => {
+    dispatch(verifyAuthentication());
+    try {
+      const {
+        data: { data: userInfo },
+      } = await API.post("/auth/signup", {
+        username,
+        email,
+        password,
+      });
+
+      dispatch(
+        onAuthenticated({ email, username, _id: userInfo._id })
       );
-    } catch ({ response: { data } }) {
-      dispatch(onLogout(data.error.message));
+
+      saveJWT(userInfo.token);
+    } catch (error) {
+      const exception =
+        error?.response?.data?.error?.message || "Unknown error";
+      dispatch(onLogout(exception));
     }
   };
 
@@ -41,5 +63,37 @@ export const useAuthStore = () => {
     dispatch(clearError());
   };
 
-  return { startLogin, status, user, errorMessage, clearErrors };
+  const startLogout = () => {
+    dispatch(onLogout());
+    localStorage.clear();
+  };
+
+  const checkAuthToken = async () => {
+    const token = localStorage.getItem("x-token");
+    if (!token) return dispatch(onLogout());
+
+    try {
+      const {
+        data: {
+          data: { username, _id, token },
+        },
+      } = await API.get("/auth/renew");
+      saveJWT(token);
+      dispatch(onAuthenticated({ username, _id }));
+    } catch (error) {
+      localStorage.clear();
+      dispatch(onLogout());
+    }
+  };
+
+  return {
+    startLogin,
+    startRegister,
+    status,
+    user,
+    checkAuthToken,
+    errorMessage,
+    startLogout,
+    clearErrors,
+  };
 };
